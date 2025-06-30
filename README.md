@@ -47,6 +47,13 @@ Here i describe a high-level user journey including basic features of the app:
 - User B can freely rekweet and quote a User A content in it's own profile (whether he support User A or not);
 - Depending on User A settings (above), User A receive the rekweet/quote, gets notified about the rekweet/quote, read the rekweet/quote or ignore it (not visualizing it).
 
+###  Upvoting/downvoting user contents
+- User A can setup his own account to:
+  - Gets notified if someone upvote/downvote its content;
+  - Gets notified if someone quotes upvote/downvote its content;
+- User B can freely upvote/downvote a User A content (whether he support User A or not);
+- Depending on User A settings (above), User A receive the upvote/downvote, gets notified about the upvote/downvote, see the upvote/downvote or ignore it (not visualizing it).
+
 ###  User history
 - When User B starts following or supporting (TBD) User A, he'll receive all past contents posted by User A in the past.
 
@@ -55,7 +62,38 @@ Here i describe a high-level user journey including basic features of the app:
 - User B can freely mention User A and comment, retweek and quote User A contents but User A will never be notified about these actions.
 
 ## Main technical requirements
-TBD
+- Hosted or local
+- Only requirement is a local Kaspa node (to be completely decentralized)
 
-## Potential architecture
-TBD
+
+## Potential architecture - Communication scheme
+
+###  Creating an account
+- User A broadcast the first message in Kwitter network, by informing everyone about his skills, interest, topics of choice, etc; in this way, he's promoting its new activity on the network.
+
+```mermaid
+sequenceDiagram
+    actor A as Alice (front-end)
+    A->>Alice Kaspa node: I'm Alice, follow me!
+    Alice Kaspa node-->>Bob's Kaspa node: I'm Alice, follow me!    
+    Bob's Kaspa node->>Bob's indexer: I'm Alice, follow me!
+    create actor B as Bob (front-end)
+    Bob's indexer->>B: I'm Alice, follow me!
+    create participant Carl's Kaspa node
+    Alice Kaspa node-->>Carl's Kaspa node: I'm Alice, follow me!
+    create participant Carl's indexer
+    Carl's Kaspa node->>Carl's indexer: I'm Alice, follow me!
+    create actor C as Carl (front-end)
+    Carl's indexer->>C: I'm Alice, follow me!
+```
+
+###  Posting the first message
+- User A posts his first message on Kwitter network, to let everyone know how exciting decentralization and Kaspa are.
+
+```mermaid
+sequenceDiagram
+    actor A as Alice (front-end)
+    A->>Alice Kaspa node: I love decentralization!
+    Alice Kaspa node->>Alice's indexer: I love decentralization!
+    Alice's indexer-->>A: I love decentralization!
+```
