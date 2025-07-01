@@ -17,9 +17,9 @@ Here i describe a high-level user journey including basic features of the app:
 ###  Posting the first message
 - User A posts his first message on Kwitter network, to let everyone know how exciting decentralization and Kaspa are.
 
-###  Following/unfolloing and supporting/unsupporting a user
+###  Following/unfollowing and supporting/unsupporting a user
 - User B, who already activated a Kwitter account last month, receive the broadcast message from User A and decides to follow him;
-- User B activates the "following" proces: everytime User A posts something new, User B is alerted and visualize this new content on his Kwitter home page;
+- User B activates the "following" process: everytime User A posts something new, User B is alerted and visualize this new content on his Kwitter home page;
 - User B decides that User A contents are interesting, therefore he chooses to support him;
 - When activating the supporting process, User B is sending a certain amount of KAS to User A;
 - User A is notified: now he knows User B is supporting him; in addition, everyone else in the network knows User A is supported by User B; 
@@ -96,4 +96,118 @@ sequenceDiagram
     A->>Alice Kaspa node: I love decentralization!
     Alice Kaspa node->>Alice's indexer: I love decentralization!
     Alice's indexer-->>A: I love decentralization!
+```
+
+###  Following a user
+- User B activates the "following" process: everytime User A posts something new, User B is alerted and visualize this new content on his Kwitter home page;
+
+ ```mermaid
+sequenceDiagram
+    actor B as Bob (front-end)
+    B->>Bob's indexer: I want to follow Alice!
+    actor A as Alice (front-end)
+    A->>Alice Kaspa node: I love Kaspa!
+    Alice Kaspa node-->>Bob Kaspa node: I love Kaspa!
+    Bob Kaspa node->>Bob's indexer: I love Kaspa!
+    Bob's indexer->>B: I love Kaspa!
+```
+
+###  Supporting a user
+- When activating the supporting process, User B is sending a certain amount of KAS to User A and User A is notified.
+
+ ```mermaid
+sequenceDiagram
+    actor B as Bob (front-end)
+    B->>Bob Kaspa node: I support Alice with 1 KAS!
+    Bob Kaspa node-->>Alice Kaspa node: I support Alice with 1 KAS!
+    Alice Kaspa node->>Alice's indexer: I support Alice with 1 KAS!
+    actor A as Alice (front-end)
+    Alice's indexer->>A: I support Alice with 1 KAS!
+```
+
+###  Commenting user contents
+- User B can freely comment User A content (whether he support User A or not).
+
+```mermaid
+sequenceDiagram
+    actor A as Alice (front-end)
+    participant Alice's indexer
+    A->>Alice Kaspa node: This is my new post!
+    Alice Kaspa node-->>Bob Kaspa node: This is my new post!
+    Bob Kaspa node->>Bob's indexer: This is my new post!
+    actor B as Bob (front-end)
+    Bob's indexer->>B: This is my new post!
+    B->>Bob Kaspa node: Here is my comment!
+    Bob Kaspa node-->>Alice Kaspa node: Here is my comment!
+    Alice Kaspa node->>Alice's indexer: Here is my comment!
+    Alice's indexer->>A: Here is my comment!
+```
+
+###  Mentioning other users in posts or comment
+- User B can freely mention User A on its posts or comments (whether he support User A or not).
+
+```mermaid
+sequenceDiagram
+    actor B as Bob (front-end)
+    B->>Bob Kaspa node: I mention @Alice on this post!
+    Bob Kaspa node-->>Alice Kaspa node: I mention @Alice on this post!
+    Alice Kaspa node->>Alice's indexer: I mention @Alice on this post!
+    actor A as Alice (front-end)
+    Alice's indexer->>A: I mention @Alice on this post!
+```
+
+###  Rekweeting/quoting user contents
+- User B can freely rekweet and quote a User A content in it's own profile (whether he support User A or not).
+
+ ```mermaid
+sequenceDiagram
+    actor A as Alice (front-end)
+    participant Alice's indexer
+    A->>Alice Kaspa node: This is my new post!
+    Alice Kaspa node-->>Bob Kaspa node: This is my new post!
+    Bob Kaspa node->>Bob's indexer: This is my new post!
+    actor B as Bob (front-end)
+    Bob's indexer->>B: This is my new post!
+    B->>Bob Kaspa node: I rekweet/quote Alice's post!
+    Bob Kaspa node-->>Alice Kaspa node: I rekweet/quote Alice's post!
+    Alice Kaspa node->>Alice's indexer: I rekweet/quote Alice's post!
+    Alice's indexer->>A: I rekweet/quote Alice's post!
+```
+
+###  Upvoting/downvoting user contents
+- User B can freely upvote/downvote a User A content (whether he support User A or not).
+
+```mermaid
+sequenceDiagram
+    actor A as Alice (front-end)
+    participant Alice's indexer
+    A->>Alice Kaspa node: This is my new post!
+    Alice Kaspa node-->>Bob Kaspa node: This is my new post!
+    Bob Kaspa node->>Bob's indexer: This is my new post!
+    actor B as Bob (front-end)
+    Bob's indexer->>B: This is my new post!
+    B->>Bob Kaspa node: I like Alice's post!
+    Bob Kaspa node-->>Alice Kaspa node: I like Alice's post!
+    Alice Kaspa node->>Alice's indexer: I like Alice's post!
+    Alice's indexer->>A: I like Alice's post!
+```
+
+###  User history
+- When User B starts following or supporting (TBD) User A, he'll receive all past contents posted by User A in the past.
+
+TBD
+
+###  Blocking users
+- Even if User B follow or support User A, User A can freely decide to block User B, blocking notifications related to all main actions (comments, mentions, retweek, quotes).
+
+ ```mermaid
+sequenceDiagram
+    actor A as Alice (front-end)
+    A->>Alice's indexer: I want to block Bob!
+    participant Alice Kaspa node
+    participant Bob Kaspa node
+    actor B as Bob (front-end)
+    B->>Bob Kaspa node: I'm trying to comment Alice's post!
+    Bob Kaspa node-->>Alice Kaspa node: I'm trying to comment Alice's post!
+    Alice Kaspa node->>Alice's indexer: I'm trying to comment Alice's post!
 ```
