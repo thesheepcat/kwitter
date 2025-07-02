@@ -87,6 +87,13 @@ sequenceDiagram
     Carl's indexer->>C: I'm Alice, follow me!
 ```
 
+**Protocol specifications**
+
+| Action | Parameters | Body |
+|--------|------------|------|
+| broadcast | --- | message |
+
+
 ###  Posting the first message
 - User A posts his first message on Kwitter network, to let everyone know how exciting decentralization and Kaspa are.
 
@@ -97,6 +104,13 @@ sequenceDiagram
     Alice Kaspa node->>Alice's indexer: I love decentralization!
     Alice's indexer-->>A: I love decentralization!
 ```
+
+**Protocol specifications**
+
+| Action | Parameters | Body |
+|--------|------------|------|
+| publish | --- | message |
+
 
 ###  Following a user
 - User B activates the "following" process: everytime User A posts something new, User B is alerted and visualize this new content on his Kwitter home page;
@@ -118,12 +132,19 @@ sequenceDiagram
  ```mermaid
 sequenceDiagram
     actor B as Bob (front-end)
-    B->>Bob Kaspa node: I support Alice with 1 KAS!
-    Bob Kaspa node-->>Alice Kaspa node: I support Alice with 1 KAS!
-    Alice Kaspa node->>Alice's indexer: I support Alice with 1 KAS!
+    B->>Bob Kaspa node: I support Alice!
+    Bob Kaspa node-->>Alice Kaspa node: I support Alice!
+    Alice Kaspa node->>Alice's indexer: I support Alice!
     actor A as Alice (front-end)
-    Alice's indexer->>A: I support Alice with 1 KAS!
+    Alice's indexer->>A: I support Alice!
 ```
+
+**Protocol specifications**
+
+| Action | Parameters | Body |
+|--------|------------|------|
+| support | user address | message |
+
 
 ###  Commenting user contents
 - User B can freely comment User A content (whether he support User A or not).
@@ -143,6 +164,23 @@ sequenceDiagram
     Alice's indexer->>A: Here is my comment!
 ```
 
+**Protocol specifications**
+
+| Action | Parameters | Body |
+|--------|------------|------|
+| comment | post ID (tx ID) | message |
+
+
+###  Replying other users comments
+TBD
+
+**Protocol specifications**
+
+| Action | Parameters | Body |
+|--------|------------|------|
+| reply | comment ID (tx ID) | message |
+
+
 ###  Mentioning other users in posts or comment
 - User B can freely mention User A on its posts or comments (whether he support User A or not).
 
@@ -155,6 +193,15 @@ sequenceDiagram
     actor A as Alice (front-end)
     Alice's indexer->>A: I mention @Alice on this post!
 ```
+
+**Protocol specifications**
+
+| Action | Parameters | Body |
+|--------|------------|------|
+| publish | user addresses[] | message |
+| comment | post ID (tx ID), user addresses[] | message |
+| reply | comment ID (tx ID), user addresses[] | message |
+
 
 ###  Rekweeting/quoting user contents
 - User B can freely rekweet and quote a User A content in it's own profile (whether he support User A or not).
@@ -174,6 +221,14 @@ sequenceDiagram
     Alice's indexer->>A: I rekweet/quote Alice's post!
 ```
 
+**Protocol specifications**
+
+| Action | Parameters | Body |
+|--------|------------|------|
+| rekweet | post ID (tx ID) | --- |
+| quote | post ID (tx ID) | message |
+
+
 ###  Upvoting/downvoting user contents
 - User B can freely upvote/downvote a User A content (whether he support User A or not).
 
@@ -191,6 +246,14 @@ sequenceDiagram
     Alice Kaspa node->>Alice's indexer: I like Alice's post!
     Alice's indexer->>A: I like Alice's post!
 ```
+
+**Protocol specifications**
+
+| Action | Parameters | Body |
+|--------|------------|------|
+| vote | post ID (tx ID), up/down | --- |
+| vote | comment ID (tx ID), up/down | --- |
+
 
 ###  User history
 - When User B starts following or supporting (TBD) User A, he'll receive all past contents posted by User A in the past.
