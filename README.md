@@ -1,29 +1,29 @@
-# Kwitter
+# K - Decentralized social media
 
 ## Scope
-Kwitter is a decentralized microblogging platform running on the top of Kaspa network: it allows people to freely express themselves, without any censorship.
+K is a decentralized microblogging platform running on the top of Kaspa network: it allows people to freely express themselves, without any censorship.
 
 
 ## User journey
 Here i describe a high-level user journey including basic features of the app:
 
 ###  Creating an account
-- User A activates the app for the first time and creates its own "Kwitter identity";
+- User A activates the app for the first time and creates its own "K identity";
 - This identity is unique in the whole network and represent only this specific user;
 - User A locally backup the required data to restore its account, in case he needs to use it on another clinet;
 - After creating its identity, User A fund its account by sending a small amount of KAS from his personal wallet, in order to pay for fees;
-- User A broadcast the first message in Kwitter network, by informing everyone about his skills, interest, topics of choice, etc; in this way, he's promoting its new activity on the network.
+- User A broadcast the first message in K network, by informing everyone about his skills, interest, topics of choice, etc; in this way, he's promoting its new activity on the network.
 
 ###  Posting the first message
-- User A posts his first message on Kwitter network, to let everyone know how exciting decentralization and Kaspa are.
+- User A posts his first message on K network, to let everyone know how exciting decentralization and Kaspa are.
 
 ###  Following/unfollowing and supporting/unsupporting a user
-- User B, who already activated a Kwitter account last month, receive the broadcast message from User A and decides to follow him;
-- User B activates the "following" process: everytime User A posts something new, User B is alerted and visualize this new content on his Kwitter home page;
+- User B, who already activated a K account last month, receive the broadcast message from User A and decides to follow him;
+- User B activates the "following" process: everytime User A posts something new, User B is alerted and visualize this new content on his K home page;
 - User B decides that User A contents are interesting, therefore he chooses to support him;
 - When activating the supporting process, User B is sending a certain amount of KAS to User A;
 - User A is notified: now he knows User B is supporting him; in addition, everyone else in the network knows User A is supported by User B; 
-- In the meantime, User C, another long time Kwitter user, received User A broadcast and start following and receiving notifications when User A posts something;
+- In the meantime, User C, another long time K user, received User A broadcast and start following and receiving notifications when User A posts something;
 - But User C doesn't like User A contents, therefore he doesn't activate the supporting process and, after few days, he also unfollow User A.
 
 ###  Commenting user contents
@@ -40,12 +40,12 @@ Here i describe a high-level user journey including basic features of the app:
 - User B can freely mention User A on its posts or comments (whether he support User A or not);
 - Depending on User A settings (above), User A receive the mention, gets notified about the mention, read the post/comments including the mention or ignore it (not visualizing it).
 
-###  Rekweeting/quoting user contents
+###  Reposting/quoting user contents
 - User A can setup his own account to:
-  - Gets notified if someone rekweet (forwarding a message, adding considerations) its content;
+  - Gets notified if someone repost (forwarding a message, adding considerations) its content;
   - Gets notified if someone quotes (forwarding a message) its content;
-- User B can freely rekweet and quote a User A content in it's own profile (whether he support User A or not);
-- Depending on User A settings (above), User A receive the rekweet/quote, gets notified about the rekweet/quote, read the rekweet/quote or ignore it (not visualizing it).
+- User B can freely repost and quote a User A content in it's own profile (whether he support User A or not);
+- Depending on User A settings (above), User A receive the repost/quote, gets notified about the repost/quote, read the repost/quote or ignore it (not visualizing it).
 
 ###  Upvoting/downvoting user contents
 - User A can setup his own account to:
@@ -69,7 +69,7 @@ Here i describe a high-level user journey including basic features of the app:
 ## Potential architecture - Communication scheme
 
 ###  Creating an account
-- User A broadcast the first message in Kwitter network, by informing everyone about his skills, interest, topics of choice, etc; in this way, he's promoting its new activity on the network.
+- User A broadcast the first message in K network, by informing everyone about his skills, interest, topics of choice, etc; in this way, he's promoting its new activity on the network.
 
 ```mermaid
 sequenceDiagram
@@ -95,7 +95,7 @@ sequenceDiagram
 
 
 ###  Posting the first message
-- User A posts his first message on Kwitter network, to let everyone know how exciting decentralization and Kaspa are.
+- User A posts his first message on K network, to let everyone know how exciting decentralization and Kaspa are.
 
 ```mermaid
 sequenceDiagram
@@ -113,7 +113,7 @@ sequenceDiagram
 
 
 ###  Following a user
-- User B activates the "following" process: everytime User A posts something new, User B is alerted and visualize this new content on his Kwitter home page;
+- User B activates the "following" process: everytime User A posts something new, User B is alerted and visualize this new content on his K home page;
 
  ```mermaid
 sequenceDiagram
@@ -203,8 +203,8 @@ sequenceDiagram
 | reply | comment ID (tx ID), user addresses[] | message |
 
 
-###  Rekweeting/quoting user contents
-- User B can freely rekweet and quote a User A content in it's own profile (whether he support User A or not).
+###  Reposting/quoting user contents
+- User B can freely repost and quote a User A content in it's own profile (whether he support User A or not).
 
  ```mermaid
 sequenceDiagram
@@ -215,17 +215,17 @@ sequenceDiagram
     Bob Kaspa node->>Bob's indexer: This is my new post!
     actor B as Bob (front-end)
     Bob's indexer->>B: This is my new post!
-    B->>Bob Kaspa node: I rekweet/quote Alice's post!
-    Bob Kaspa node-->>Alice Kaspa node: I rekweet/quote Alice's post!
-    Alice Kaspa node->>Alice's indexer: I rekweet/quote Alice's post!
-    Alice's indexer->>A: I rekweet/quote Alice's post!
+    B->>Bob Kaspa node: I repost/quote Alice's post!
+    Bob Kaspa node-->>Alice Kaspa node: I repost/quote Alice's post!
+    Alice Kaspa node->>Alice's indexer: I repost/quote Alice's post!
+    Alice's indexer->>A: I repost/quote Alice's post!
 ```
 
 **Protocol specifications**
 
 | Action | Parameters | Body |
 |--------|------------|------|
-| rekweet | post ID (tx ID) | --- |
+| repost | post ID (tx ID) | --- |
 | quote | post ID (tx ID) | message |
 
 
