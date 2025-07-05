@@ -93,6 +93,7 @@ sequenceDiagram
 |--------|------------|------|
 | broadcast | --- | message |
 
+Payload example: k:1:post:sender_pubkey:sender_signature:body
 
 ###  Posting the first message
 - User A posts his first message on K network, to let everyone know how exciting decentralization and Kaspa are.
@@ -109,7 +110,9 @@ sequenceDiagram
 
 | Action | Parameters | Body |
 |--------|------------|------|
-| publish | --- | message |
+| post | --- | message |
+
+Payload example: k:1:post:sender_pubkey:sender_signature:body
 
 
 ###  Following a user
@@ -143,7 +146,9 @@ sequenceDiagram
 
 | Action | Parameters | Body |
 |--------|------------|------|
-| support | user address | message |
+| support | recipient pubkey | message |
+
+Payload example: k:1:support:sender_pubkey:sender_signature:body
 
 
 ###  Commenting user contents
@@ -170,6 +175,8 @@ sequenceDiagram
 |--------|------------|------|
 | comment | post ID (tx ID) | message |
 
+Payload example: k:1:comment:sender_pubkey:sender_signature:body
+
 
 ###  Replying other users comments
 TBD
@@ -179,6 +186,8 @@ TBD
 | Action | Parameters | Body |
 |--------|------------|------|
 | reply | comment ID (tx ID) | message |
+
+Payload example: k:1:reply:sender_pubkey:sender_signature:body
 
 
 ###  Mentioning other users in posts or comment
@@ -198,9 +207,14 @@ sequenceDiagram
 
 | Action | Parameters | Body |
 |--------|------------|------|
-| publish | user addresses[] | message |
+| post | user addresses[] | message |
 | comment | post ID (tx ID), user addresses[] | message |
 | reply | comment ID (tx ID), user addresses[] | message |
+
+Payload examples:
+- k:1:post:sender_pubkey:sender_signature:body
+- k:1:comment:sender_pubkey:sender_signature:body
+- k:1:reply:sender_pubkey:sender_signature:body
 
 
 ###  Reposting/quoting user contents
@@ -228,6 +242,9 @@ sequenceDiagram
 | repost | post ID (tx ID) | --- |
 | quote | post ID (tx ID) | message |
 
+Payload examples:
+- k:1:repost:sender_pubkey:sender_signature:body
+- k:1:quote:sender_pubkey:sender_signature:body
 
 ###  Upvoting/downvoting user contents
 - User B can freely upvote/downvote a User A content (whether he support User A or not).
@@ -254,6 +271,7 @@ sequenceDiagram
 | vote | post ID (tx ID), up/down | --- |
 | vote | comment ID (tx ID), up/down | --- |
 
+Payload example: k:1:vote:sender_pubkey:sender_signature:body
 
 ###  User history
 - When User B starts following or supporting (TBD) User A, he'll receive all past contents posted by User A in the past.
