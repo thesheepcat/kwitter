@@ -61,10 +61,15 @@ Here i describe a high-level user journey including basic features of the app:
 - Even if User B follow or support User A, User A can freely decide to block User B, blocking notifications related to all main actions (comments, mentions, retweek, quotes);
 - User B can freely mention User A and comment, retweek and quote User A contents but User A will never be notified about these actions.
 
-## Main technical requirements
-- Hosted or local
-- Only requirement is a local Kaspa node (to be completely decentralized)
+###  Endorsing (suggesting) users
+- User A like User B so much that he feels like User B deserve an endorsement, due to the value of his contents;
+- User A broadcast an "endorsement" message to all his supporting users, suggesting to follow and support User B;
+- All users supporting User A receive a notification which invites them to support User B.
 
+
+## Main technical requirements
+- The app should work both locally (on a PC, for a single user) and hosted (exposed on the internet, for multiple users);
+- For a single user, the only requirement to run this app is a local Kaspa node running on mainnet (to be completely decentralized).
 
 ## Potential architecture - Communication scheme
 
@@ -291,4 +296,23 @@ sequenceDiagram
     B->>Bob Kaspa node: I'm trying to comment Alice's post!
     Bob Kaspa node-->>Alice Kaspa node: I'm trying to comment Alice's post!
     Alice Kaspa node->>Alice's indexer: I'm trying to comment Alice's post!
+```
+
+###  Endorsing (suggesting) users
+- User A broadcast an "endorsement" message to all his supporting users, suggesting to follow and support User B;
+
+```mermaid
+sequenceDiagram
+    actor A as Alice (front-end)
+    A->>Alice Kaspa node: Hey guys, please support Bob!
+    Alice Kaspa node-->>Carl's Kaspa node: Hey guys, please support Bob!
+    Carl's Kaspa node->>Carl's indexer: Hey guys, please support Bob!
+    create actor C as Carl (front-end)
+    Carl's indexer->>C: Hey guys, please support Bob!
+    create participant Dereck's Kaspa node
+    Alice Kaspa node-->>Dereck's Kaspa node: Hey guys, please support Bob!
+    create participant Dereck's indexer
+    Dereck's Kaspa node->>Dereck's indexer: Hey guys, please support Bob!
+    create actor D as Dereck (front-end)
+    Dereck's indexer->>D: Hey guys, please support Bob!
 ```
