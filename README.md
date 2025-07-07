@@ -71,6 +71,31 @@ Here i describe a high-level user journey including basic features of the app:
 - The app should work both locally (on a PC, for a single user) and hosted (exposed on the internet, for multiple users);
 - For a single user, the only requirement to run this app is a local Kaspa node running on mainnet (to be completely decentralized).
 
+## Potential architecture - Actors overview
+
+### Main rule
+Each user locally runs its own:
+- Kaspa node
+- Indexer
+- Webapp (frontend)
+
+### Diagram
+
+```mermaid
+sequenceDiagram
+    participant U as User (front-end)
+    participant I as User indexer
+    participant K as Kaspa node
+
+    Note over I,K: Background synchronization
+    K-->>I: Receive messages
+
+    Note over U,K: User interactions with system
+    U->>I: Request messages
+    I-->>U: Response
+    U->>K: Send messages
+```
+
 ## Potential architecture - Communication scheme
 
 ###  Creating an account
@@ -79,29 +104,50 @@ Here i describe a high-level user journey including basic features of the app:
 ```mermaid
 sequenceDiagram
     actor A as Alice (front-end)
-    A->>Alice Kaspa node: I'm Alice, follow me!
-    Alice Kaspa node-->>Bob's Kaspa node: I'm Alice, follow me!    
-    Bob's Kaspa node->>Bob's indexer: I'm Alice, follow me!
+    A->>Alice Kaspa node: I'm Alice, I'm new here!
+    Alice Kaspa node-->>Bob's Kaspa node: I'm Alice, I'm new here!   
+    Bob's Kaspa node->>Bob's indexer: I'm Alice, I'm new here!
     create actor B as Bob (front-end)
-    Bob's indexer->>B: I'm Alice, follow me!
+    Bob's indexer->>B: I'm Alice, I'm new here!
     create participant Carl's Kaspa node
-    Alice Kaspa node-->>Carl's Kaspa node: I'm Alice, follow me!
+    Alice Kaspa node-->>Carl's Kaspa node: I'm Alice, I'm new here!
     create participant Carl's indexer
-    Carl's Kaspa node->>Carl's indexer: I'm Alice, follow me!
+    Carl's Kaspa node->>Carl's indexer: I'm Alice, I'm new here!!
     create actor C as Carl (front-end)
-    Carl's indexer->>C: I'm Alice, follow me!
+    Carl's indexer->>C: I'm Alice, I'm new here!
 ```
 
-**Protocol specifications**
+**Protocol Specifications**
 
-| Action | Parameters | Body |
-|--------|------------|------|
-| broadcast | --- | message |
+Action: `broadcast`
 
-Payload example: k:1:post:sender_pubkey:sender_signature:body
+**Payload Format:**
+```
+k:1:broadcast:message_body
+```
 
-###  Posting the first message
-- User A posts his first message on K network, to let everyone know how exciting decentralization and Kaspa are.
+**Message Body Structure:**
+```json
+{
+  "sender_pubkey": "",
+  "sender_signature": "",
+  "message": ""
+}
+```
+
+### Example Usage
+```
+k:1:broadcast:{"sender_pubkey":"abc123","sender_signature":"def456","message":"I'm Alice, I'm new here!"}
+```
+
+### Field Descriptions
+- `sender_pubkey`: The public key of the message sender
+- `sender_signature`: Digital signature for message verification
+- `message`: The message to broadcast
+
+
+###  Posting a message
+- User A posts a message on K network, to let everyone know how exciting decentralization and Kaspa are.
 
 ```mermaid
 sequenceDiagram
@@ -111,13 +157,33 @@ sequenceDiagram
     Alice's indexer-->>A: I love decentralization!
 ```
 
-**Protocol specifications**
+**Protocol Specifications**
 
-| Action | Parameters | Body |
-|--------|------------|------|
-| post | --- | message |
+Action: `post`
 
-Payload example: k:1:post:sender_pubkey:sender_signature:body
+**Payload Format:**
+```
+k:1:post:message_body
+```
+
+**Message Body Structure:**
+```json
+{
+  "sender_pubkey": "",
+  "sender_signature": "",
+  "message": ""
+}
+```
+
+### Example Usage
+```
+k:1:post:{"sender_pubkey":"abc123","sender_signature":"def456","message":"I love decentralization!"}
+```
+
+### Field Descriptions
+- `sender_pubkey`: The public key of the message sender
+- `sender_signature`: Digital signature for message verification
+- `message`: The message to post
 
 
 ###  Following a user
@@ -133,6 +199,8 @@ sequenceDiagram
     Bob Kaspa node->>Bob's indexer: I love Kaspa!
     Bob's indexer->>B: I love Kaspa!
 ```
+**Protocol specifications**
+No protocol definition is required.
 
 ###  Supporting a user
 - When activating the supporting process, User B is sending a certain amount of KAS to User A and User A is notified.
@@ -147,13 +215,29 @@ sequenceDiagram
     Alice's indexer->>A: I support Alice!
 ```
 
-**Protocol specifications**
+**Protocol Specifications**
 
-| Action | Parameters | Body |
-|--------|------------|------|
-| support | recipient pubkey | message |
+Action: `support`
 
-Payload example: k:1:support:sender_pubkey:sender_signature:body
+**Payload Format:**
+```
+k:1:support:message_body
+```
+
+**Message Body Structure:**
+```json
+{
+  "sender_pubkey": "",
+  "sender_signature": "",
+  "message": "",
+  "recipient_pubkey": ""
+}
+```
+
+### Example Usage
+```
+k:1:support:{"sender_pubkey":"abc123","sender_signature":"def456","message":"I support Alice!","recipient_pubkey":"xyz987"}
+```
 
 
 ###  Commenting user contents
@@ -174,25 +258,57 @@ sequenceDiagram
     Alice's indexer->>A: Here is my comment!
 ```
 
-**Protocol specifications**
+**Protocol Specifications**
 
-| Action | Parameters | Body |
-|--------|------------|------|
-| comment | post ID (tx ID) | message |
+Action: `comment`
 
-Payload example: k:1:comment:sender_pubkey:sender_signature:body
+**Payload Format:**
+```
+k:1:comment:message_body
+```
+
+**Message Body Structure:**
+```json
+{
+  "sender_pubkey": "",
+  "sender_signature": "",
+  "message": "",
+  "tx_id": ""
+}
+```
+
+### Example Usage
+```
+k:1:comment:{"sender_pubkey":"abc123","sender_signature":"def456","message":"Here is my comment!","tx_id": "123456789"}
+```
 
 
 ###  Replying other users comments
-TBD
+- User B can freely reply to User A comment (whether he support User A or not).
 
-**Protocol specifications**
+**Protocol Specifications**
 
-| Action | Parameters | Body |
-|--------|------------|------|
-| reply | comment ID (tx ID) | message |
+Action: `reply`
 
-Payload example: k:1:reply:sender_pubkey:sender_signature:body
+**Payload Format:**
+```
+k:1:reply:message_body
+```
+
+**Message Body Structure:**
+```json
+{
+  "sender_pubkey": "",
+  "sender_signature": "",
+  "message": "",
+  "tx_id": ""
+}
+```
+
+### Example Usage
+```
+k:1:reply:{"sender_pubkey":"abc123","sender_signature":"def456","message":"Here is my reply!","tx_id": "123456789"}
+```
 
 
 ###  Mentioning other users in posts or comment
@@ -207,7 +323,7 @@ sequenceDiagram
     actor A as Alice (front-end)
     Alice's indexer->>A: I mention @Alice on this post!
 ```
-
+TO BE FIXED
 **Protocol specifications**
 
 | Action | Parameters | Body |
@@ -240,19 +356,56 @@ sequenceDiagram
     Alice's indexer->>A: I repost/quote Alice's post!
 ```
 
-**Protocol specifications**
+**Protocol Specifications**
 
-| Action | Parameters | Body |
-|--------|------------|------|
-| repost | post ID (tx ID) | --- |
-| quote | post ID (tx ID) | message |
+Action: `repost`
 
-Payload examples:
-- k:1:repost:sender_pubkey:sender_signature:body
-- k:1:quote:sender_pubkey:sender_signature:body
+**Payload Format:**
+```
+k:1:repost:message_body
+```
 
-###  Upvoting/downvoting user contents
-- User B can freely upvote/downvote a User A content (whether he support User A or not).
+**Message Body Structure:**
+```json
+{
+  "sender_pubkey": "",
+  "sender_signature": "",
+  "message": "",
+  "tx_id": ""
+}
+```
+
+### Example Usage
+```
+k:1:repost:{"sender_pubkey":"abc123","sender_signature":"def456","message":"","tx_id": "123456789"}
+```
+-----------------------------
+
+Action: `quote`
+
+**Payload Format:**
+```
+k:1:quote:message_body
+```
+
+**Message Body Structure:**
+```json
+{
+  "sender_pubkey": "",
+  "sender_signature": "",
+  "message": "",
+  "tx_id": ""
+}
+```
+
+### Example Usage
+```
+k:1:quote:{"sender_pubkey":"abc123","sender_signature":"def456","message":"This is my opinion!","tx_id": "123456789"}
+```
+
+
+###  Upvoting user contents
+- User B can freely upvote a User A content (whether he support User A or not).
 
 ```mermaid
 sequenceDiagram
@@ -269,16 +422,31 @@ sequenceDiagram
     Alice's indexer->>A: I like Alice's post!
 ```
 
-**Protocol specifications**
+**Protocol Specifications**
 
-| Action | Parameters | Body |
-|--------|------------|------|
-| vote | post ID (tx ID), up/down | --- |
-| vote | comment ID (tx ID), up/down | --- |
+Action: `vote`
 
-Payload example: k:1:vote:sender_pubkey:sender_signature:body
+**Payload Format:**
+```
+k:1:vote:message_body
+```
 
-###  User history
+**Message Body Structure:**
+```json
+{
+  "sender_pubkey": "",
+  "sender_signature": "",
+  "tx_id": "",
+  "isLiked": true
+}
+```
+
+### Example Usage
+```
+k:1:repost:{"sender_pubkey":"abc123","sender_signature":"def456","tx_id": "123456789","isLiked": true}
+```
+
+### User history
 - When User B starts following or supporting (TBD) User A, he'll receive all past contents posted by User A in the past.
 
 TBD
@@ -315,4 +483,28 @@ sequenceDiagram
     Dereck's Kaspa node->>Dereck's indexer: Hey guys, please support Bob!
     create actor D as Dereck (front-end)
     Dereck's indexer->>D: Hey guys, please support Bob!
+```
+
+**Protocol Specifications**
+
+Action: `suggest`
+
+**Payload Format:**
+```
+k:1:suggest:message_body
+```
+
+**Message Body Structure:**
+```json
+{
+  "sender_pubkey": "",
+  "sender_signature": "",
+  "message": "",
+  "recipient_pubkey": ""
+}
+```
+
+### Example Usage
+```
+k:1:repost:{"sender_pubkey":"abc123","sender_signature":"def456","message":"Hey guys, please support Bob!","recipient_pubkey":"xyz987"}
 ```
