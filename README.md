@@ -239,6 +239,11 @@ k:1:support:message_body
 k:1:support:{"sender_pubkey":"abc123","sender_signature":"def456","message":"I support Alice!","recipient_pubkey":"xyz987"}
 ```
 
+### Field Descriptions
+- `sender_pubkey`: The public key of the message sender
+- `sender_signature`: Digital signature for message verification
+- `message`: The message to post when supporting someone
+- `recipient_pubkey`: The pubkey of the user being supported
 
 ###  Commenting user contents
 - User B can freely comment User A content (whether he support User A or not).
@@ -282,6 +287,12 @@ k:1:comment:message_body
 k:1:comment:{"sender_pubkey":"abc123","sender_signature":"def456","message":"Here is my comment!","tx_id": "123456789"}
 ```
 
+### Field Descriptions
+- `sender_pubkey`: The public key of the message sender
+- `sender_signature`: Digital signature for message verification
+- `message`: The comment
+- `tx_id`: The reference to the user's post being commented
+
 
 ###  Replying other users comments
 - User B can freely reply to User A comment (whether he support User A or not).
@@ -310,6 +321,11 @@ k:1:reply:message_body
 k:1:reply:{"sender_pubkey":"abc123","sender_signature":"def456","message":"Here is my reply!","tx_id": "123456789"}
 ```
 
+### Field Descriptions
+- `sender_pubkey`: The public key of the message sender
+- `sender_signature`: Digital signature for message verification
+- `message`: The reply
+- `tx_id`: The reference to the user's comment being replied to
 
 ###  Mentioning other users in posts or comment
 - User B can freely mention User A on its posts or comments (whether he support User A or not).
@@ -370,15 +386,21 @@ k:1:repost:message_body
 {
   "sender_pubkey": "",
   "sender_signature": "",
-  "message": "",
   "tx_id": ""
 }
 ```
 
 ### Example Usage
 ```
-k:1:repost:{"sender_pubkey":"abc123","sender_signature":"def456","message":"","tx_id": "123456789"}
+k:1:repost:{"sender_pubkey":"abc123","sender_signature":"def456","tx_id": "123456789"}
 ```
+
+### Field Descriptions
+- `sender_pubkey`: The public key of the message sender
+- `sender_signature`: Digital signature for message verification
+- `message`: empty
+- `tx_id`: The reference to the user's post being reposted
+
 -----------------------------
 
 Action: `quote`
@@ -400,9 +422,14 @@ k:1:quote:message_body
 
 ### Example Usage
 ```
-k:1:quote:{"sender_pubkey":"abc123","sender_signature":"def456","message":"This is my opinion!","tx_id": "123456789"}
+k:1:quote:{"sender_pubkey":"abc123","sender_signature":"def456","message":"This is my comment!","tx_id": "123456789"}
 ```
 
+### Field Descriptions
+- `sender_pubkey`: The public key of the message sender
+- `sender_signature`: Digital signature for message verification
+- `message`: The comment on the post being quoted
+- `tx_id`: The reference to the user's post being quoted
 
 ###  Upvoting user contents
 - User B can freely upvote a User A content (whether he support User A or not).
@@ -443,8 +470,14 @@ k:1:vote:message_body
 
 ### Example Usage
 ```
-k:1:repost:{"sender_pubkey":"abc123","sender_signature":"def456","tx_id": "123456789","isLiked": true}
+k:1:vote:{"sender_pubkey":"abc123","sender_signature":"def456","tx_id": "123456789","isLiked": true}
 ```
+
+### Field Descriptions
+- `sender_pubkey`: The public key of the message sender
+- `sender_signature`: Digital signature for message verification
+- `tx_id`: The reference to the user's content being liked
+- `isLiked`: The value defining the user likes the content
 
 ### User history
 - When User B starts following or supporting (TBD) User A, he'll receive all past contents posted by User A in the past.
@@ -508,3 +541,12 @@ k:1:suggest:message_body
 ```
 k:1:repost:{"sender_pubkey":"abc123","sender_signature":"def456","message":"Hey guys, please support Bob!","recipient_pubkey":"xyz987"}
 ```
+
+### Field Descriptions
+- `sender_pubkey`: The public key of the message sender
+- `sender_signature`: Digital signature for message verification
+- `message`: The message to post when endorsing someone
+- `recipient_pubkey`: The pubkey of the user being endorsed
+
+
+
